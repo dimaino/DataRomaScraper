@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataRomaScraper.Migrations
 {
-    public partial class InitalMigration : Migration
+    public partial class InitialMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,8 +15,8 @@ namespace DataRomaScraper.Migrations
                     CompanyId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    NumberOfStocks = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    PortfolioValue = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    NumberOfStocks = table.Column<int>(type: "int", nullable: false),
+                    PortfolioValue = table.Column<double>(type: "double", nullable: false),
                     HoldingURL = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     DateRecorded = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     DatePulled = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
@@ -36,11 +36,11 @@ namespace DataRomaScraper.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Ticker = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     StockName = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    PercentOfPortfolio = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    NumberOfShares = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    PercentOfPortfolio = table.Column<double>(type: "double", nullable: false),
+                    NumberOfShares = table.Column<int>(type: "int", nullable: false),
                     RecentActivity = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    ReportedPrice = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    Value = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    ReportedPrice = table.Column<double>(type: "double", nullable: false),
+                    Value = table.Column<double>(type: "double", nullable: false),
                     DateRecorded = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     DatePulled = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),

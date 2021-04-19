@@ -10,8 +10,8 @@ namespace MySQLScrapper.Models
         [Key]
         public int CompanyId { get; set; }
         public string Name { get; set; }
-        public string NumberOfStocks { get; set; }
-        public string PortfolioValue { get; set; }
+        public int NumberOfStocks { get; set; }
+        public double PortfolioValue { get; set; }
         public string HoldingURL { get; set; }
         public string DateRecorded { get; set; }
         public string DatePulled { get; set; }

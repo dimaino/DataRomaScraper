@@ -10,11 +10,11 @@ namespace MySQLScrapper.Models
         public int CompanyHoldingId { get; set; }
         public string Ticker { get; set; }
         public string StockName { get; set; }
-        public string PercentOfPortfolio { get; set; }
-        public string NumberOfShares { get; set; }
+        public double PercentOfPortfolio { get; set; }
+        public int NumberOfShares { get; set; }
         public string RecentActivity { get; set; }
-        public string ReportedPrice { get; set; }
-        public string Value { get; set; }
+        public double ReportedPrice { get; set; }
+        public double Value { get; set; }
         public string DateRecorded { get; set; }
         public string DatePulled { get; set; }
         [Required]

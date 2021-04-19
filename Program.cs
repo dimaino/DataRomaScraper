@@ -37,24 +37,11 @@ namespace DataRomaScraper
             foreach(string link in holdingLinks)
             {
                 HtmlDocument newDoc = await _Scraper.PageToScrape(link);
-                // Console.WriteLine(i);
-                // if(_Scraper.ExtractExtraPages(newDoc) != null)
-                // {
-                //     foreach(var o in _Scraper.ExtractExtraPages(newDoc))
-                //     {
-                //         Console.WriteLine(o);
-                //     }
-                // }
-                // // i++;
-                
-                
-                Console.WriteLine(Scraper.MapCompanyData(newDoc, link));
 
                 Company comp = Scraper.MapCompanyData(newDoc, link);
-                // comp.DatePulled = "31 Mar 2021";
+                comp.DatePulled = "31 Mar 2021";
 
                 Company comp1 = _DataContext.Companys.Where(c => c.Name == comp.Name && c.DatePulled == comp.DatePulled).FirstOrDefault();
-
                 if(comp1 == null)
                 {
                     _DataContext.Companys.Add(comp);
@@ -70,7 +57,6 @@ namespace DataRomaScraper
                             
                             foreach(var cH in companiesHolding)
                             {
-                                Console.WriteLine(cH);
                                 cH.CompanyId = addedCompany.CompanyId;
                                 cH.DateRecorded = addedCompany.DateRecorded;
                                 cH.DatePulled = addedCompany.DatePulled;
@@ -78,7 +64,6 @@ namespace DataRomaScraper
                                 cH.UpdatedAt = DateTime.Now;
                                 _DataContext.CompanyHoldings.Add(cH);
                             }
-                            Console.WriteLine();
                         }
                     }
                     else

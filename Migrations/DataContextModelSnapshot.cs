@@ -38,11 +38,11 @@ namespace DataRomaScraper.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("NumberOfStocks")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<int>("NumberOfStocks")
+                        .HasColumnType("int");
 
-                    b.Property<string>("PortfolioValue")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<double>("PortfolioValue")
+                        .HasColumnType("double");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -70,17 +70,17 @@ namespace DataRomaScraper.Migrations
                     b.Property<string>("DateRecorded")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("NumberOfShares")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<int>("NumberOfShares")
+                        .HasColumnType("int");
 
-                    b.Property<string>("PercentOfPortfolio")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<double>("PercentOfPortfolio")
+                        .HasColumnType("double");
 
                     b.Property<string>("RecentActivity")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("ReportedPrice")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<double>("ReportedPrice")
+                        .HasColumnType("double");
 
                     b.Property<string>("StockName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -91,8 +91,8 @@ namespace DataRomaScraper.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Value")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<double>("Value")
+                        .HasColumnType("double");
 
                     b.HasKey("CompanyHoldingId");
 

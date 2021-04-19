@@ -94,7 +94,8 @@ namespace DataRomaScraper.Services
 
         public static string ExtractPortfolioValue(HtmlDocument doc)
         {
-            return doc.DocumentNode.SelectSingleNode("//p[@id='p2']//span[4]").InnerText;
+            String str = doc.DocumentNode.SelectSingleNode("//p[@id='p2']//span[4]").InnerText;
+            return str.Substring(1, str.Length - 2);
         }
 
         public List<string> ExtractAllCompanyNames(HtmlDocument doc)
@@ -124,8 +125,8 @@ namespace DataRomaScraper.Services
         {
             return new Company {
                 Name = GetCompanyName(doc),
-                NumberOfStocks = ExtractNumberOfStocks(doc),
-                PortfolioValue = ExtractPortfolioValue(doc),
+                NumberOfStocks = Int32.Parse(ExtractNumberOfStocks(doc)),
+                PortfolioValue = Double.Parse(ExtractPortfolioValue(doc)),
                 HoldingURL = currentUrl,
                 DateRecorded = ExtractDateRecorded(doc),
                 DatePulled = ExtractDatePulled(doc),
@@ -149,14 +150,14 @@ namespace DataRomaScraper.Services
                 CompanyHolding newHoldings = new CompanyHolding();
                 newHoldings.Ticker = tableData[1 + num].InnerText.Substring(0, tableData[1 + num].InnerText.IndexOf('-') - 1);
                 newHoldings.StockName = stockName.Replace("'","");
-                newHoldings.PercentOfPortfolio = tableData[2 + num].InnerText;
-                newHoldings.NumberOfShares = tableData[3 + num].InnerText;
+                newHoldings.PercentOfPortfolio = Double.Parse(tableData[2 + num].InnerText);
+                newHoldings.NumberOfShares = Int32.Parse(tableData[3 + num].InnerText.Replace(",", ""));
                 newHoldings.RecentActivity = tableData[4 + num].InnerText;
-                newHoldings.ReportedPrice = tableData[5 + num].InnerText;
-                newHoldings.Value = tableData[6 + num].InnerText;
+                newHoldings.ReportedPrice = Double.Parse(tableData[5 + num].InnerText.Substring(1, tableData[5 + num].InnerText.Length - 1));
+                Console.WriteLine(tableData[6 + num].InnerText);
+                newHoldings.Value = Double.Parse(tableData[6 + num].InnerText.Substring(1, tableData[6 + num].InnerText.Length - 1));
                 newHoldings.DateRecorded = "";
                 newHoldings.DatePulled = "";
-                // newHoldings.CompanyId = companyId;
                 num = num + 7;
                 holdings.Add(newHoldings);
             }
