@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
+using MySQLScrapper.Models;
 
 namespace DataRomaScraper.Services
 {
@@ -47,6 +48,20 @@ namespace DataRomaScraper.Services
             return doc.DocumentNode.Descendants("a").Select(l => BaseUrl + l.GetAttributeValue("href", null)).Where(link => link.Contains("holdings")).ToList();
         }
 
+        public List<string> ExtractExtraPages(HtmlDocument doc)
+        {
+            if(doc.DocumentNode.SelectNodes("//div[@id='pages']") != null)
+            {
+                return doc.DocumentNode.SelectNodes("//div[@id='pages']/a")
+                    .Select(l => l.InnerHtml + "," + BaseUrl + l.GetAttributeValue("href", null))
+                    .Where(it => it.Any(char.IsDigit))
+                    .Select(l => l.Split(',').Last())
+                    .Distinct().
+                    ToList();
+            }
+            return null;
+        }
+
         public List<HtmlNode> ExtractTableHeader(HtmlDocument doc)
         {
             return doc.DocumentNode.SelectNodes("//table[@id='grid']/thead/tr/td").ToList();
@@ -75,7 +90,6 @@ namespace DataRomaScraper.Services
         public static string ExtractNumberOfStocks(HtmlDocument doc)
         {
             return doc.DocumentNode.SelectSingleNode("//p[@id='p2']//span[3]").InnerText;
-            // return Int32.Parse(doc.DocumentNode.SelectSingleNode("//p[@id='p2']//span[3]").InnerText);
         }
 
         public static string ExtractPortfolioValue(HtmlDocument doc)
@@ -90,6 +104,63 @@ namespace DataRomaScraper.Services
                 .Where(link => link.Contains("holdings"))
                 .Select(link => link.Split(',').First())
                 .ToList();
+        }
+
+        public async Task ExtractAllUpdatedCompanies(HtmlDocument doc)
+        {
+            // Read in each link
+            List<string> holdingLinks = ExtractAllHoldingLinks(doc);
+
+            List<CompanyHolding> companiesHolding = new List<CompanyHolding>();
+
+            foreach(string link in holdingLinks)
+            {
+                HtmlDocument newDoc = await PageToScrape(link);
+                Console.WriteLine(MapCompanyData(newDoc, link));
+            }
+        }
+
+        public static Company MapCompanyData(HtmlDocument doc, string currentUrl)
+        {
+            return new Company {
+                Name = GetCompanyName(doc),
+                NumberOfStocks = ExtractNumberOfStocks(doc),
+                PortfolioValue = ExtractPortfolioValue(doc),
+                HoldingURL = currentUrl,
+                DateRecorded = ExtractDateRecorded(doc),
+                DatePulled = ExtractDatePulled(doc),
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
+            };
+        }
+
+        public static List<CompanyHolding> MapCompaniesHoldings(HtmlDocument doc)
+        {
+            int num = 0;
+            var tableData = GetAllTableResults(doc);
+            int rows = tableData.Count;
+            List<CompanyHolding> holdings = new List<CompanyHolding>();
+            while(num < rows)
+            {
+                new CompanyHolding {
+                    
+                };
+                String stockName = tableData[1 + num].InnerText.Substring(tableData[1 + num].InnerText.IndexOf('-') + 2, tableData[1 + num].InnerText.Length - tableData[1 + num].InnerText.IndexOf('-') - 2);
+                CompanyHolding newHoldings = new CompanyHolding();
+                newHoldings.Ticker = tableData[1 + num].InnerText.Substring(0, tableData[1 + num].InnerText.IndexOf('-') - 1);
+                newHoldings.StockName = stockName.Replace("'","");
+                newHoldings.PercentOfPortfolio = tableData[2 + num].InnerText;
+                newHoldings.NumberOfShares = tableData[3 + num].InnerText;
+                newHoldings.RecentActivity = tableData[4 + num].InnerText;
+                newHoldings.ReportedPrice = tableData[5 + num].InnerText;
+                newHoldings.Value = tableData[6 + num].InnerText;
+                newHoldings.DateRecorded = "";
+                newHoldings.DatePulled = "";
+                // newHoldings.CompanyId = companyId;
+                num = num + 7;
+                holdings.Add(newHoldings);
+            }
+            return holdings;
         }
     }
 }
