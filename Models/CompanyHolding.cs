@@ -13,6 +13,7 @@ namespace MySQLScrapper.Models
         public double PercentOfPortfolio { get; set; }
         public int NumberOfShares { get; set; }
         public string RecentActivity { get; set; }
+        public double ChangePercentage { get; set; }
         public double ReportedPrice { get; set; }
         public double Value { get; set; }
         public string DateRecorded { get; set; }

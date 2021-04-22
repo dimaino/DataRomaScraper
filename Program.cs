@@ -74,7 +74,7 @@ namespace DataRomaScraper
                         
                         foreach(var cH in companiesHolding)
                         {
-                            Console.WriteLine(cH);
+                            // Console.WriteLine(cH);
                             cH.CompanyId = addedCompany.CompanyId;
                             cH.DateRecorded = addedCompany.DateRecorded;
                             cH.DatePulled = addedCompany.DatePulled;
@@ -82,7 +82,7 @@ namespace DataRomaScraper
                             cH.UpdatedAt = DateTime.Now;
                             _DataContext.CompanyHoldings.Add(cH);
                         }
-                        Console.WriteLine();
+                        // Console.WriteLine();
                     }
                 }
             }

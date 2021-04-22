@@ -58,6 +58,9 @@ namespace DataRomaScraper.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<double>("ChangePercentage")
+                        .HasColumnType("double");
+
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 

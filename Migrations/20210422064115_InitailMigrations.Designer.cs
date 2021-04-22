@@ -9,8 +9,8 @@ using MySQLScrapper.Data;
 namespace DataRomaScraper.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210419222855_InitialMigrations")]
-    partial class InitialMigrations
+    [Migration("20210422064115_InitailMigrations")]
+    partial class InitailMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -59,6 +59,9 @@ namespace DataRomaScraper.Migrations
                     b.Property<int>("CompanyHoldingId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<double>("ChangePercentage")
+                        .HasColumnType("double");
 
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");

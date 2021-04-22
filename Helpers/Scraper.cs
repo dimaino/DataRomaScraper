@@ -153,8 +153,25 @@ namespace DataRomaScraper.Services
                 newHoldings.PercentOfPortfolio = Double.Parse(tableData[2 + num].InnerText);
                 newHoldings.NumberOfShares = Int32.Parse(tableData[3 + num].InnerText.Replace(",", ""));
                 newHoldings.RecentActivity = tableData[4 + num].InnerText;
+                // newHoldings.RecentActivity = tableData[4 + num].InnerText;
+                String[] Activity = tableData[4 + num].InnerText.Split(" ");
+                
+                if(Activity[0].Equals(" ") || Activity[0].Equals(""))
+                {
+                    newHoldings.RecentActivity = "Same";
+                    newHoldings.ChangePercentage = 0;
+                }
+                else if(Activity[0].Equals("Buy"))
+                {
+                    newHoldings.RecentActivity = "Buy";
+                    newHoldings.ChangePercentage = 0;
+                }
+                else
+                {
+                    newHoldings.RecentActivity = Activity[0];
+                    newHoldings.ChangePercentage = Double.Parse(Activity[1].TrimEnd('%'));
+                }
                 newHoldings.ReportedPrice = Double.Parse(tableData[5 + num].InnerText.Substring(1, tableData[5 + num].InnerText.Length - 1));
-                Console.WriteLine(tableData[6 + num].InnerText);
                 newHoldings.Value = Double.Parse(tableData[6 + num].InnerText.Substring(1, tableData[6 + num].InnerText.Length - 1));
                 newHoldings.DateRecorded = "";
                 newHoldings.DatePulled = "";

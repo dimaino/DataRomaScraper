@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataRomaScraper.Migrations
 {
-    public partial class InitialMigrations : Migration
+    public partial class InitailMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,6 +39,7 @@ namespace DataRomaScraper.Migrations
                     PercentOfPortfolio = table.Column<double>(type: "double", nullable: false),
                     NumberOfShares = table.Column<int>(type: "int", nullable: false),
                     RecentActivity = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    ChangePercentage = table.Column<double>(type: "double", nullable: false),
                     ReportedPrice = table.Column<double>(type: "double", nullable: false),
                     Value = table.Column<double>(type: "double", nullable: false),
                     DateRecorded = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
