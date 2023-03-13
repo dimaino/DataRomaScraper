@@ -1,0 +1,7 @@
+2022-05-15 13:00:12.3677|INFO|ScheduleRepeater.Repeater|RepeatDaily|Setting the Repeat time to once every day.
+2022-05-15 13:00:12.3987|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-05-15 13:00:12.4007|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 5/16/2022 1:00:12 PM - currentTime 5/15/2022 1:00:12 PM
+2022-05-16 13:00:12.5873|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-05-16 13:00:12.5873|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 5/17/2022 1:00:12 PM - currentTime 5/16/2022 1:00:12 PM
+2022-05-17 13:00:12.5936|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-05-17 13:00:12.5954|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 5/18/2022 1:00:12 PM - currentTime 5/17/2022 1:00:12 PM

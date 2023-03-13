@@ -1,0 +1,17 @@
+2022-06-05 13:54:45.1134|INFO|ScheduleRepeater.Repeater|RepeatDaily|Setting the Repeat time to once every day.
+2022-06-05 13:54:45.1488|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-06-05 13:54:45.1488|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 6/6/2022 1:54:45 PM - currentTime 6/5/2022 1:54:45 PM
+2022-06-06 13:54:45.3591|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-06-06 13:54:45.3608|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 6/7/2022 1:54:45 PM - currentTime 6/6/2022 1:54:45 PM
+2022-06-07 13:54:45.3641|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-06-07 13:54:45.3654|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 6/8/2022 1:54:45 PM - currentTime 6/7/2022 1:54:45 PM
+2022-06-08 13:54:45.3668|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-06-08 13:54:45.3668|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 6/9/2022 1:54:45 PM - currentTime 6/8/2022 1:54:45 PM
+2022-06-09 13:54:45.3702|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-06-09 13:54:45.3702|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 6/10/2022 1:54:45 PM - currentTime 6/9/2022 1:54:45 PM
+2022-06-10 13:54:45.3730|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-06-10 13:54:45.3730|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 6/11/2022 1:54:45 PM - currentTime 6/10/2022 1:54:45 PM
+2022-06-11 13:54:45.3759|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-06-11 13:54:45.3771|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 6/12/2022 1:54:45 PM - currentTime 6/11/2022 1:54:45 PM
+2022-06-12 13:54:45.3785|INFO|ScheduleRepeater.Repeater|SetupRepeater|Adding 1 day to the sleep timer.
+2022-06-12 13:54:45.3785|INFO|ScheduleRepeater.Repeater|SetupRepeater|tickTimer: 1.00:00:00 = _ReapeaterDate 6/13/2022 1:54:45 PM - currentTime 6/12/2022 1:54:45 PM

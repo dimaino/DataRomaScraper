@@ -10,13 +10,10 @@ namespace MySQLScrapper.Models
         public int CompanyHoldingId { get; set; }
         public string Ticker { get; set; }
         public string StockName { get; set; }
-        public double PercentOfPortfolio { get; set; }
         public int NumberOfShares { get; set; }
-        public string RecentActivity { get; set; }
-        public double ChangePercentage { get; set; }
         public double ReportedPrice { get; set; }
-        public double Value { get; set; }
-        public string DateRecorded { get; set; }
+        public double ReportedValue { get; set; }
+        public string PortfolioDate { get; set; } 
         public string DatePulled { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
@@ -28,7 +25,7 @@ namespace MySQLScrapper.Models
 
         public override string ToString()
         {
-            return $"CompanyHoldingId: {CompanyHoldingId} - Ticker: {Ticker} - Stock Name: {StockName} - Percent of Portfolio: {PercentOfPortfolio} - Number of Shares: {NumberOfShares} - Recent Activity {RecentActivity} - Reported Price {ReportedPrice} - Value {Value} - Date Recorded {DateRecorded} - Date Pulled {DatePulled}";
+            return $"CompanyHoldingId: {CompanyHoldingId} - Ticker: {Ticker} - Stock Name: {StockName} - Number of Shares: {NumberOfShares} - Reported Price {ReportedPrice} - Date Recorded {PortfolioDate} - Date Pulled {DatePulled}";
         }
     }
 }

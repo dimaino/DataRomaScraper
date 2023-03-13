@@ -1,0 +1,9 @@
+Main objective.
+
+Get all Companies and thier stocks.
+
+For ecery stock get all the information for each.
+
+Data should show where all information was obtained and when it was. 
+
+Find all companies that invested in MSFT. Find how many stocks are owned by these companies.

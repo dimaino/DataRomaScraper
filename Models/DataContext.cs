@@ -11,6 +11,7 @@ namespace MySQLScrapper.Data
     {
         public DbSet<Company> Companys { get; set; }
         public DbSet<CompanyHolding> CompanyHoldings { get; set; }
+        public DbSet<CompanyHoldingPage> CompanyHoldingPages { get; set; }
 
         private static IConfigurationRoot Configuration { get; set; }
 
@@ -30,7 +31,7 @@ namespace MySQLScrapper.Data
             Configuration = builder.Build();
 
             optionsBuilder.UseMySql(
-                Configuration.GetConnectionString("DefaultConnection"), 
+                Configuration["ConnectionStrings:Default"], 
                 new MySqlServerVersion(new Version(8, 0, 23))
             );
         }
@@ -49,6 +50,13 @@ namespace MySQLScrapper.Data
                 entity.HasKey(e => e.CompanyHoldingId);
                 entity.HasOne(d => d.Company)
                     .WithMany(c => c.CompanyHoldings);
+            });
+
+            modelBuilder.Entity<CompanyHoldingPage>(entity => 
+            {
+                entity.HasKey(e => e.CompanyHoldingPageId);
+                entity.HasOne(d => d.Company)
+                    .WithMany(c => c.CompanyHoldingPages);
             });
         }
     }

@@ -11,6 +11,8 @@ using HtmlAgilityPack;
 using DataRomaScraper.Services;
 using System.Linq;
 
+using ScheduleRepeater;
+
 namespace DataRomaScraper
 {
     class Program
@@ -20,75 +22,139 @@ namespace DataRomaScraper
         private static Scraper _Scraper;
         private static DataContext _DataContext;
 
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             RegisterServices();
 
+            Repeater r = new Repeater();
+            // r.StartDateTimeForRepeater(2022, 5, 11, 3, 0, 0);
+            r.RepeatDaily();
+            r.RepeatedMethod(async () => await UpdateEverything());
+
+            DisposeOfServices();
+        }
+
+        private static async Task UpdateEverything()
+        {
             _DataContext = new DataContext();
-
             _Scraper = new Scraper("https://www.dataroma.com");
-            HtmlDocument doc = await _Scraper.PageToScrape(_Scraper.BaseUrl + "/m/managers.php");
 
-            List<string> holdingLinks = _Scraper.ExtractAllHoldingLinks(doc);
+            await UpdateCompaniesAndLinks(_DataContext, _Scraper);
+            await UpdateCompanyHoldings(_DataContext, _Scraper);
+        }
+
+        private static async Task UpdateCompanyHoldings(DataContext DataContext, Scraper scraper)
+        {
             List<CompanyHolding> companiesHolding = new List<CompanyHolding>();
+            List<CompanyHoldingPage> links = await DataContext.CompanyHoldingPages.Include(co => co.Company).Where(comp => comp.Company.Newest == true).ToListAsync();
 
-
-            // int i = 1;
-            foreach(string link in holdingLinks)
+            foreach(var link in links)
             {
-                HtmlDocument newDoc = await _Scraper.PageToScrape(link);
+                Console.WriteLine(link);
+                HtmlDocument newDoc = scraper.PageToScrape(link.link).GetAwaiter().GetResult();
+                companiesHolding = Scraper.MapCompaniesHoldings(newDoc, DataContext);
 
-                Company comp = Scraper.MapCompanyData(newDoc, link);
-                comp.DatePulled = "31 Mar 2021";
-
-                Company comp1 = _DataContext.Companys.Where(c => c.Name == comp.Name && c.DatePulled == comp.DatePulled).FirstOrDefault();
-                if(comp1 == null)
+                foreach(var cH in companiesHolding)
                 {
-                    _DataContext.Companys.Add(comp);
-                    _DataContext.SaveChanges();
-                    if(_Scraper.ExtractExtraPages(newDoc) != null)
+                    if(!DataContext.CompanyHoldings.Any(compHold => compHold.PortfolioDate == cH.PortfolioDate && compHold.Ticker == cH.Ticker))
                     {
-                        foreach(var o in _Scraper.ExtractExtraPages(newDoc))
-                        {
-                            HtmlDocument newDoc1 = await _Scraper.PageToScrape(o);
-                            companiesHolding = Scraper.MapCompaniesHoldings(newDoc1);
-
-                            Company addedCompany = _DataContext.Companys.Where(co => co.Name == comp.Name && co.DatePulled == comp.DatePulled).FirstOrDefault();
-                            
-                            foreach(var cH in companiesHolding)
-                            {
-                                cH.CompanyId = addedCompany.CompanyId;
-                                cH.DateRecorded = addedCompany.DateRecorded;
-                                cH.DatePulled = addedCompany.DatePulled;
-                                cH.CreatedAt = DateTime.Now;
-                                cH.UpdatedAt = DateTime.Now;
-                                _DataContext.CompanyHoldings.Add(cH);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        companiesHolding = Scraper.MapCompaniesHoldings(newDoc);
-
-                        Company addedCompany = _DataContext.Companys.Where(co => co.Name == comp.Name && co.DatePulled == comp.DatePulled).FirstOrDefault();
-                        
-                        foreach(var cH in companiesHolding)
-                        {
-                            // Console.WriteLine(cH);
-                            cH.CompanyId = addedCompany.CompanyId;
-                            cH.DateRecorded = addedCompany.DateRecorded;
-                            cH.DatePulled = addedCompany.DatePulled;
-                            cH.CreatedAt = DateTime.Now;
-                            cH.UpdatedAt = DateTime.Now;
-                            _DataContext.CompanyHoldings.Add(cH);
-                        }
-                        // Console.WriteLine();
+                        cH.CompanyId = link.CompanyId;
+                        _DataContext.CompanyHoldings.Add(cH);
                     }
                 }
             }
-            _DataContext.SaveChanges();
+            DataContext.SaveChanges();
+        }
 
-            DisposeOfServices();
+        private static async Task UpdateCompaniesAndLinks(DataContext DataContext, Scraper scraper)
+        {
+            scraper = new Scraper("https://www.dataroma.com");
+            HtmlDocument doc = await scraper.PageToScrape(scraper.BaseUrl + "/m/managers.php");
+
+            List<string> holdingLinks = scraper.ExtractAllHoldingLinks(doc);
+            List<Company> allCompanies = new List<Company>();
+            List<CompanyHoldingPage> companyHoldingPage = new List<CompanyHoldingPage>();
+
+            Dictionary<Company, List<string>> CompanyLinks = new Dictionary<Company, List<string>>();
+
+            Console.WriteLine("SEARCHING: Searching for all company holding links.");
+
+            Parallel.ForEach(holdingLinks, link =>
+            {
+                HtmlDocument newDoc = scraper.PageToScrape(link).GetAwaiter().GetResult();
+                Company comp = Scraper.MapCompanyData(newDoc);
+
+                List<string> links = new List<string>();
+
+                if(scraper.ExtractExtraPages(newDoc) != null)
+                {
+                    foreach(var pagelinks in scraper.ExtractExtraPages(newDoc))
+                    {
+                        links.Add(pagelinks);
+                    }
+                }
+                else
+                {
+                    links.Add(link);
+                }
+                CompanyLinks.Add(comp, links);
+            });
+
+            Console.WriteLine("CHECKING: Companies and Links.");
+
+            foreach(var compLink in CompanyLinks)
+            {
+                var company = compLink.Key;
+                var links = compLink.Value;
+
+                if(!DataContext.Companys.Any(comp => comp.Name == company.Name && comp.DateRecorded == company.DateRecorded))
+                {
+                    company.Newest = true;
+                    List<Company> companies = await DataContext.Companys.Where(com => com.Name == company.Name).ToListAsync();
+
+                    foreach(var c in companies) 
+                    { 
+                        c.Newest = false; 
+                    }
+
+                    DataContext.Companys.Add(company);
+                    DataContext.SaveChanges();
+                    Console.WriteLine($"ADDING: {company}");
+                    foreach(var link in links)
+                    {
+                        Console.WriteLine($"ADDING: {link}");
+                        DataContext.CompanyHoldingPages.Add(new CompanyHoldingPage {
+                            link = link,
+                            CreatedAt = DateTime.Now,
+                            UpdatedAt = DateTime.Now,
+                            CompanyId = DataContext.Companys.Where(comp => comp.Name == company.Name && comp.Newest == true).FirstOrDefault().CompanyId
+                        });
+                    }
+                    DataContext.SaveChanges();
+                }
+                else
+                {
+                    Console.WriteLine($"IN-DATABASE: {company}");
+                    foreach(var link in links)
+                    {
+                        if(!DataContext.CompanyHoldingPages.Any(chp => chp.link == link))
+                        {
+                            Console.WriteLine($"ADDING: {link} added to database.");
+                            DataContext.CompanyHoldingPages.Add(new CompanyHoldingPage {
+                                link = link,
+                                CreatedAt = DateTime.Now,
+                                UpdatedAt = DateTime.Now,
+                                CompanyId = company.CompanyId
+                            });
+                        }
+                        else
+                        {
+                            Console.WriteLine($"IN-DATABASE: {link} already in database.");
+                        }
+                    }
+                    DataContext.SaveChanges();
+                }
+            }
         }
 
         private static void RegisterServices()
@@ -98,9 +164,10 @@ namespace DataRomaScraper
 
             ServiceCollection collection = new ServiceCollection();
             collection.AddDbContext<DataContext>(options => options.UseMySql(
-                Configuration.GetConnectionString("DefaultConnection"), 
+                Configuration["ConnectionStrings:Default"], 
                 new MySqlServerVersion(new Version(8, 0, 23))
-            ));
+            ), ServiceLifetime.Transient);
+            
             _ServiceProvider = collection.BuildServiceProvider();
         }
 

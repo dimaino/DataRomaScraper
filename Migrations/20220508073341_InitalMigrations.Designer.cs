@@ -9,8 +9,8 @@ using MySQLScrapper.Data;
 namespace DataRomaScraper.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210422064115_InitailMigrations")]
-    partial class InitailMigrations
+    [Migration("20220508073341_InitalMigrations")]
+    partial class InitalMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,11 +34,11 @@ namespace DataRomaScraper.Migrations
                     b.Property<string>("DateRecorded")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("HoldingURL")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("Newest")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("NumberOfStocks")
                         .HasColumnType("int");
@@ -60,9 +60,6 @@ namespace DataRomaScraper.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<double>("ChangePercentage")
-                        .HasColumnType("double");
-
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
@@ -72,19 +69,16 @@ namespace DataRomaScraper.Migrations
                     b.Property<string>("DatePulled")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("DateRecorded")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<int>("NumberOfShares")
                         .HasColumnType("int");
 
-                    b.Property<double>("PercentOfPortfolio")
-                        .HasColumnType("double");
-
-                    b.Property<string>("RecentActivity")
+                    b.Property<string>("PortfolioDate")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<double>("ReportedPrice")
+                        .HasColumnType("double");
+
+                    b.Property<double>("ReportedValue")
                         .HasColumnType("double");
 
                     b.Property<string>("StockName")
@@ -96,14 +90,36 @@ namespace DataRomaScraper.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<double>("Value")
-                        .HasColumnType("double");
-
                     b.HasKey("CompanyHoldingId");
 
                     b.HasIndex("CompanyId");
 
                     b.ToTable("CompanyHoldings");
+                });
+
+            modelBuilder.Entity("MySQLScrapper.Models.CompanyHoldingPage", b =>
+                {
+                    b.Property<int>("CompanyHoldingPageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("link")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("CompanyHoldingPageId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("CompanyHoldingPages");
                 });
 
             modelBuilder.Entity("MySQLScrapper.Models.CompanyHolding", b =>
@@ -117,8 +133,21 @@ namespace DataRomaScraper.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("MySQLScrapper.Models.CompanyHoldingPage", b =>
+                {
+                    b.HasOne("MySQLScrapper.Models.Company", "Company")
+                        .WithMany("CompanyHoldingPages")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Company");
+                });
+
             modelBuilder.Entity("MySQLScrapper.Models.Company", b =>
                 {
+                    b.Navigation("CompanyHoldingPages");
+
                     b.Navigation("CompanyHoldings");
                 });
 #pragma warning restore 612, 618

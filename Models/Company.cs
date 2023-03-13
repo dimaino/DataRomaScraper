@@ -12,18 +12,20 @@ namespace MySQLScrapper.Models
         public string Name { get; set; }
         public int NumberOfStocks { get; set; }
         public double PortfolioValue { get; set; }
-        public string HoldingURL { get; set; }
         public string DateRecorded { get; set; }
         public string DatePulled { get; set; }
+        public bool Newest { get; set; }
         [Required]
         public DateTime CreatedAt { get; set; }
         [Required]
         public DateTime UpdatedAt { get; set; }
         public virtual ICollection<CompanyHolding> CompanyHoldings { get; set; }
+        public virtual ICollection<CompanyHoldingPage> CompanyHoldingPages { get; set; }
 
         public override string ToString()
         {
-            return $"CompanyId: {CompanyId} - Name: {Name} - Number of Stocks: {NumberOfStocks} - Portfolio Value: {PortfolioValue} - Holdings Url: {HoldingURL} - Date Recorded: {DateRecorded} - Date Pulled: {DatePulled}";
+            // return $"Name: {Name} - Number of Stocks: {NumberOfStocks}";
+            return $"CompanyId: {CompanyId} - Name: {Name} - Number of Stocks: {NumberOfStocks} - Portfolio Value: {PortfolioValue} - Date Recorded: {DateRecorded} - Date Pulled: {DatePulled}";
         }
     }
 }
